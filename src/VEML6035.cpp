@@ -64,7 +64,7 @@ VEML6035Class::begin()
   
   long id = read(VEML6035_REG_ID);
   if (id < 0 || (id & 0xFF) != VEML6035_WHO_AM_I)
-	  return 0;
+    return 0;
   
   // Initialization
   write(VEML6035_REG_ALS_CONF, VEML6035_DEFAULT_ALS_CONF);
