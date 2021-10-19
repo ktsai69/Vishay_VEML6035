@@ -1,0 +1,24 @@
+#######################################
+# Syntax Coloring Map For Vishay_VEML6035
+####################################### 
+# Class
+#######################################
+
+Vishay_VEML6035	KEYWORD1
+VEML6035	KEYWORD1
+veml6035	KEYWORD1
+
+#######################################
+# Methods and Functions 
+#######################################	
+
+begin	KEYWORD2
+end	KEYWORD2
+
+read_ALS	KEYWORD2
+get_lux	KEYWORD2
+
+#######################################
+# Constants
+#######################################
+lens_factor	LITERAL1
