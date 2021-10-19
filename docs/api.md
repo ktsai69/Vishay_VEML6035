@@ -80,28 +80,28 @@ veml6035.end();
 
 ### `read_ALS()`
 
-Read the veml6035's Ambient Light sensor. 
+Read the veml6035's Ambient Light sensor count. 
 
 #### Syntax 
 
 ```
-veml6035.read_ALS()
+boolean veml6035.read_ALS(uint16_t *als)
 ```
 
 #### Parameters
 
-None.
+als - point of uint16_t for als count
 
 #### Returns
 
-Positive or zero on success, negative on failure.
+true on success, false on failure.
 
 #### Example
 
 ```
-long als = veml6035.read_ALS();
+uint16_t als;
 
-if (als >= 0)
+if (veml6035.read_ALS(&als))
     Serial.print(als);
 
 ```
@@ -121,7 +121,7 @@ Read the veml6035's Ambient Lioght sensor and convert to lux.
 #### Syntax 
 
 ```
-veml6035.get_lux()
+float veml6035.get_lux()
 ```
 
 #### Parameters
@@ -157,7 +157,7 @@ Lens Factor for customerize material effect.
 #### Syntax 
 
 ```
-veml6035.lens_factor
+float veml6035.lens_factor
 ```
 
 #### Parameters

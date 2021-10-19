@@ -35,13 +35,12 @@ void setup()
 
 void loop()
 {
-  long als = veml6035.read_ALS();
-  float lux = veml6035.get_lux();
-  if (als >= 0 && lux >= 0)
+  uint16_t als;
+  if (veml6035.read_ALS(&als))
   {
     Serial.print(als);
     Serial.print('\t');    
-    Serial.println(lux);
+    Serial.println(veml6035.get_lux());
   }
 
   delay(500);

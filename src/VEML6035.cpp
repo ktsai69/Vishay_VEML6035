@@ -48,8 +48,7 @@
 #define VEML6035_DEFAULT_WL         0x0000
 #define VEML6035_DEFAULT_PSM        0x0000
 
-VEML6035Class::VEML6035Class(TwoWire& wire) :
-  _wire(&wire)
+VEML6035Class::VEML6035Class(TwoWire& wire) : _wire(&wire)
 {
 }
 
@@ -62,8 +61,8 @@ VEML6035Class::begin()
   _wire->begin();
   slaveAddress = VEML6035_ADDRESS;
   
-  long id = read(VEML6035_REG_ID);
-  if (id < 0 || (id & 0xFF) != VEML6035_WHO_AM_I)
+  uint16_t id;
+  if (!read(VEML6035_REG_ID, &id) || (id & 0xFF) != VEML6035_WHO_AM_I)
     return 0;
   
   // Initialization
@@ -76,10 +75,9 @@ VEML6035Class::begin()
   return 1;
 }
 
-long VEML6035Class::read(uint8_t reg)
+boolean VEML6035Class::read(uint8_t reg, uint16_t *data)
 {
   uint8_t   wd;
-  uint16_t  data;
 
   _wire->beginTransmission(slaveAddress);
   if (_wire->write (reg) != 1)
@@ -94,80 +92,79 @@ long VEML6035Class::read(uint8_t reg)
   if (!wd)
     goto read_error;
   
-  data = _wire->read();
-  data |= _wire->read() << 8;
-  return data;
+  *data = _wire->read();
+  *data |= _wire->read() << 8;
+  return true;
 
 read_error:
   _wire->endTransmission(true);
-  return -1;
+  return false;
 }
 
-int VEML6035Class::write(uint8_t reg, uint16_t data)
+boolean VEML6035Class::write(uint8_t reg, uint16_t data)
 {
-  int status = 1;
+  boolean status = true;
   
   _wire->beginTransmission(slaveAddress);
   if ((_wire->write(reg) == 1) &&
       (_wire->write((uint8_t)(data & 0xFF)) == 1) &&
       (_wire->write((uint8_t)((data >> 8) & 0xFF)) == 1))
-      status = -1;
+      status = false;
   _wire->endTransmission(true);
 
   return status;
 }
 
-long VEML6035Class::read_ALS(void)
+boolean VEML6035Class::read_ALS(uint16_t *als)
 {
-  return read(VEML6035_REG_ALS);
+  return read(VEML6035_REG_ALS, als);
 }
 
 float VEML6035Class::get_lux(void)
 {
   float resolution[] = {0.0128f, 0.0064f, 0.0032f, 0.0016f, 0.0008f, 0.0004f};
-  int als_conf = read(VEML6035_REG_ALS_CONF);
-  long als = read_ALS();
-  uint16_t als_it = 0x0000;
+  uint16_t als_conf;
+  uint16_t als;
+  uint16_t als_it;
   boolean gain, dg, sens;
-  if (als_conf >= 0 && als >= 0)
-  {
-    als_it = (uint16_t)als_conf;
-    als_it &= VEML6035_ALS_IT_MASK;
-    als_it >>= VEML6035_ALS_IT_SHIFT;
-    // map als_it to match the array as {25ms, 50ms, 100ms, 200ms, 400ms, 800ms} order
-    switch (als_it)
-    {
-      case 0:
-      case 1:
-      case 2:
-      case 3:
-        als_it += 2;
-        break;
-      default:
-        als_it &= 0xC;
-        als_it = (als_it == 0xC) ? 0: 1;
-        break;
-    }
-    
-    dg = (als_conf & VEML6035_DG) ? 1 : 0;
-    gain = (als_conf & VEML6035_GAIN) ? 1 : 0;
-    sens = (als_conf & VEML6035_SENS) ? 1 : 0;
+  
+  if (!read(VEML6035_REG_ALS_CONF, &als_conf) || !read_ALS(&als))
+    return -1.0f;
 
-    float lux = (float)als;    
-    lux *= resolution[als_it];
-    if (!dg)
-      lux *= 2.0f;
-    if (!gain && !sens)
-      lux *= 2.0f;
-    else if (gain && sens)
-      lux *= 8.0f;
-    else if (!gain && sens)
-      lux *= 16.0f;
-      
-    lux *= lens_factor;
-    return lux;
+  als_it = (als_conf & VEML6035_ALS_IT_MASK) >> VEML6035_ALS_IT_SHIFT;
+  
+  // map als_it to match the array as {25ms, 50ms, 100ms, 200ms, 400ms, 800ms} order
+  switch (als_it)
+  {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+      als_it += 2;
+      break;
+    default:
+      als_it &= 0xC;
+      als_it = (als_it == 0xC) ? 0: 1;
+      break;
   }
-  return (float)als;
+    
+  dg = (als_conf & VEML6035_DG) ? 1 : 0;
+  gain = (als_conf & VEML6035_GAIN) ? 1 : 0;
+  sens = (als_conf & VEML6035_SENS) ? 1 : 0;
+
+  float lux = (float)als;    
+  lux *= resolution[als_it];
+  if (!dg)
+    lux *= 2.0f;
+  if (!gain && !sens)
+    lux *= 2.0f;
+  else if (gain && sens)
+    lux *= 8.0f;
+  else if (!gain && sens)
+    lux *= 16.0f;
+      
+  lux *= lens_factor;
+  return lux;
 }
 
 VEML6035Class veml6035(Wire);
