@@ -60,7 +60,11 @@ VEML6035Class::begin()
 {
   _wire->begin();
   slaveAddress = VEML6035_ADDRESS;
-  
+
+  // Prevent I2C bus lockup
+  write(VEML6035_REG_WL, VEML6035_DEFAULT_WL);
+  write(VEML6035_REG_WL, VEML6035_DEFAULT_WL);
+
   uint16_t id;
   if (!read(VEML6035_REG_ID, &id) || (id & 0xFF) != VEML6035_WHO_AM_I)
     return 0;
@@ -122,47 +126,26 @@ boolean VEML6035Class::read_ALS(uint16_t *als)
 
 float VEML6035Class::get_lux(void)
 {
-  float resolution[] = {0.0128f, 0.0064f, 0.0032f, 0.0016f, 0.0008f, 0.0004f};
   uint16_t als_conf;
   uint16_t als;
-  uint16_t als_it;
-  boolean gain, dg, sens;
   
   if (!read(VEML6035_REG_ALS_CONF, &als_conf) || !read_ALS(&als))
     return -1.0f;
 
-  als_it = (als_conf & VEML6035_ALS_IT_MASK) >> VEML6035_ALS_IT_SHIFT;
+  int als_it = (als_conf & VEML6035_ALS_IT_MASK) >> VEML6035_ALS_IT_SHIFT;
   
   // map als_it to match the array as {25ms, 50ms, 100ms, 200ms, 400ms, 800ms} order
-  switch (als_it)
-  {
-    case 0:
-    case 1:
-    case 2:
-    case 3:
-      als_it += 2;
-      break;
-    default:
-      als_it &= 0xC;
-      als_it = (als_it == 0xC) ? 0: 1;
-      break;
-  }
+  float resolution[] = {0.0128f, 0.0064f, 0.0032f, 0.0016f, 0.0008f, 0.0004f};
+  als_it = (als_it <= 3) ? als_it+2 : (((als_it & 0xC) == 0xC) ? 0: 1);
     
-  dg = (als_conf & VEML6035_DG) ? 1 : 0;
-  gain = (als_conf & VEML6035_GAIN) ? 1 : 0;
-  sens = (als_conf & VEML6035_SENS) ? 1 : 0;
-
   float lux = (float)als;    
   lux *= resolution[als_it];
-  if (!dg)
+  if (!(als_conf & VEML6035_DG))
     lux *= 2.0f;
-  if (!gain && !sens)
-    lux *= 2.0f;
-  else if (gain && sens)
-    lux *= 8.0f;
-  else if (!gain && sens)
-    lux *= 16.0f;
-      
+  float gain_factor[] = {2.0f, 16.0f, 1.0f, 8.0f};
+  int gain_id = ((als_conf & VEML6035_GAIN) ? 0b10 : 0b00) | \
+                ((als_conf & VEML6035_SENS) ? 0b01 : 0b00);
+  lux *= gain_factor[gain_id];
   lux *= lens_factor;
   return lux;
 }
