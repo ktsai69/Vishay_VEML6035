@@ -33,9 +33,11 @@ if (!veml6035.begin()) {
 
 * [begin()](#begin)
 * [end()](#end)
-* [read_PRX()](#read_PRX)
 * [read_ALS()](#read_ALS)
 * [get_lux()](#get_lux)
+* [setINT()](#setINT)
+* [enableINT_with_threshold()](#enableINT_with_threshold)
+* [cleanINT()](#cleanINT)
 * [lens_factor](#lens_factor)
 
 ### `end()`
@@ -76,6 +78,9 @@ veml6035.end();
 * [end()](#end)
 * [read_ALS()](#read_ALS)
 * [get_lux()](#get_lux)
+* [setINT()](#setINT)
+* [enableINT_with_threshold()](#enableINT_with_threshold)
+* [cleanINT()](#cleanINT)
 * [lens_factor](#lens_factor)
 
 ### `read_ALS()`
@@ -112,6 +117,9 @@ if (veml6035.read_ALS(&als))
 * [end()](#end)
 * [read_ALS()](#read_ALS)
 * [get_lux()](#get_lux)
+* [setINT()](#setINT)
+* [enableINT_with_threshold()](#enableINT_with_threshold)
+* [cleanINT()](#cleanINT)
 * [lens_factor](#lens_factor)
 
 ### `get_lux()`
@@ -148,6 +156,116 @@ if (lux >= 0)
 * [end()](#end)
 * [read_ALS()](#read_ALS)
 * [get_lux()](#get_lux)
+* [setINT()](#setINT)
+* [enableINT_with_threshold()](#enableINT_with_threshold)
+* [cleanINT()](#cleanINT)
+* [lens_factor](#lens_factor)
+
+### `setINT()`
+
+Enable/disable interrupt 
+
+#### Syntax 
+
+```
+boolean veml6035.setINT()
+```
+
+#### Parameters
+
+enable - true to enable interrupt, false to disable interrupt.
+
+#### Returns
+
+true on success, false on failure.
+
+#### Example
+
+```
+// Enable interrupt
+veml6035.setINT(enable);
+```
+
+#### See also
+
+* [begin()](#begin)
+* [end()](#end)
+* [read_ALS()](#read_ALS)
+* [get_lux()](#get_lux)
+* [setINT()](#setINT)
+* [enableINT_with_threshold()](#enableINT_with_threshold)
+* [cleanINT()](#cleanINT)
+* [lens_factor](#lens_factor)
+
+### `enableINT_with_threshold()`
+
+Enable interrupt and set the threshold by percentage. 
+
+#### Syntax 
+
+```
+boolean veml6035.enableINT_with_threshold(float percent)
+```
+
+#### Parameters
+
+percent - threshold percentage.
+
+#### Returns
+
+true on success, false on failure.
+
+#### Example
+
+```
+// Enable interrupt and set threshold 3%
+veml6035.enableINT_with_threshold(3.0f);
+```
+
+#### See also
+
+* [begin()](#begin)
+* [end()](#end)
+* [read_ALS()](#read_ALS)
+* [get_lux()](#get_lux)
+* [setINT()](#setINT)
+* [enableINT_with_threshold()](#enableINT_with_threshold)
+* [cleanINT()](#cleanINT)
+* [lens_factor](#lens_factor)
+
+### `cleanINT()`
+
+Clean interrupt 
+
+#### Syntax 
+
+```
+boolean veml6035.cleanINT()
+```
+
+#### Parameters
+
+None.
+
+#### Returns
+
+true on success, false on failure.
+
+#### Example
+
+```
+veml6035.cleanINT();
+```
+
+#### See also
+
+* [begin()](#begin)
+* [end()](#end)
+* [read_ALS()](#read_ALS)
+* [get_lux()](#get_lux)
+* [setINT()](#setINT)
+* [enableINT_with_threshold()](#enableINT_with_threshold)
+* [cleanINT()](#cleanINT)
 * [lens_factor](#lens_factor)
 
 ### `lens_factor`
@@ -181,4 +299,7 @@ Serial.print(veml6035.lens_factor);
 * [end()](#end)
 * [read_ALS()](#read_ALS)
 * [get_lux()](#get_lux)
+* [setINT()](#setINT)
+* [enableINT_with_threshold()](#enableINT_with_threshold)
+* [cleanINT()](#cleanINT)
 * [lens_factor](#lens_factor)

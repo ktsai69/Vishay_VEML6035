@@ -28,8 +28,12 @@
 #define VEML6035_REG_PSM            0x03
 #define VEML6035_REG_ALS            0x04
 #define VEML6035_REG_WHITE          0x05
+#define VEML6035_REG_IF             0x06
 #define VEML6035_REG_ID             0x07
 
+// ALS_CONF
+#define VEML6035_SD                 (1 << 0)
+#define VEML6035_INT_EN             (1 << 1)
 #define VEML6035_ALS_IT_SHIFT       6
 #define VEML6035_ALS_IT_MASK        (0xF << VEML6035_ALS_IT_SHIFT)
 #define VEML6035_ALS_IT_25MS        (0xC << VEML6035_ALS_IT_SHIFT)
@@ -38,11 +42,14 @@
 #define VEML6035_ALS_IT_200MS       (0x1 << VEML6035_ALS_IT_SHIFT)
 #define VEML6035_ALS_IT_400MS       (0x2 << VEML6035_ALS_IT_SHIFT)
 #define VEML6035_ALS_IT_800MS       (0x3 << VEML6035_ALS_IT_SHIFT)
-
 #define VEML6035_GAIN               (1 << 10)
 #define VEML6035_DG                 (1 << 11)
 #define VEML6035_SENS               (1 << 12)
+// IF
+#define VEML6035_IF_H               (1 << 14)
+#define VEML6035_IF_L               (1 << 15)
 
+// Default values
 #define VEML6035_DEFAULT_ALS_CONF   (VEML6035_ALS_IT_100MS | VEML6035_SENS)
 #define VEML6035_DEFAULT_WH         0xFFFF
 #define VEML6035_DEFAULT_WL         0x0000
@@ -54,6 +61,7 @@ VEML6035Class::VEML6035Class(TwoWire& wire) : _wire(&wire)
 
 VEML6035Class::~VEML6035Class()
 {
+  setINT(false);
 }
 
 VEML6035Class::begin()
@@ -107,13 +115,13 @@ read_error:
 
 boolean VEML6035Class::write(uint8_t reg, uint16_t data)
 {
-  boolean status = true;
+  boolean status = false;
   
   _wire->beginTransmission(slaveAddress);
   if ((_wire->write(reg) == 1) &&
       (_wire->write((uint8_t)(data & 0xFF)) == 1) &&
       (_wire->write((uint8_t)((data >> 8) & 0xFF)) == 1))
-      status = false;
+    status = true;
   _wire->endTransmission(true);
 
   return status;
@@ -148,6 +156,55 @@ float VEML6035Class::get_lux(void)
   lux *= gain_factor[gain_id];
   lux *= lens_factor;
   return lux;
+}
+
+boolean VEML6035Class::setINT(boolean enable)
+{
+  uint16_t als_conf;
+  
+  if (!read(VEML6035_REG_ALS_CONF, &als_conf))
+    return false;
+    
+  if (enable)
+    als_conf |= VEML6035_INT_EN;
+  else
+    als_conf &= ~VEML6035_INT_EN;
+
+  return write(VEML6035_REG_ALS_CONF, als_conf);
+}
+
+boolean VEML6035Class::enableINT_with_threshold(float percent)
+{
+  uint16_t als;
+  
+  if (!read(VEML6035_REG_ALS, &als) || percent <= 0)
+    return false;
+ 
+  float thdh = (float)als * (100.0 + percent) / 100.0;
+  float thdl = (float)als * (100.0 - percent) / 100.0;
+  if (thdh - thdl < 1.0)
+    thdh += 1.0;
+  uint16_t wh = (thdh > 65535.0f) ? 65535 : (uint16_t)thdh;   
+  uint16_t wl = (thdl < 0.0f) ? 0 : (uint16_t)thdl;
+
+  if (setINT(false) &&
+      write(VEML6035_REG_WH, wh) &&
+      write(VEML6035_REG_WL, wl) &&
+      setINT(true))
+    return true;
+    
+  return false;
+}
+
+boolean VEML6035Class::cleanINT(void)
+{
+  uint16_t int_flag;
+
+  if (read(VEML6035_REG_IF, &int_flag))
+  {
+    return (int_flag & (VEML6035_IF_H | VEML6035_IF_L)) ? true : false;
+  }
+  return false;
 }
 
 VEML6035Class veml6035(Wire);
