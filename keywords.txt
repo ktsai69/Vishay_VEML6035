@@ -17,6 +17,9 @@ end	KEYWORD2
 
 read_ALS	KEYWORD2
 get_lux	KEYWORD2
+setINT	KEYWORD2
+enableINT_with_threshold	KEYWORD2
+cleanINT	KEYWORD2
 
 #######################################
 # Constants

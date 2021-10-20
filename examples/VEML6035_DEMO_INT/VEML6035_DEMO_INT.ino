@@ -54,7 +54,6 @@ void loop()
     isr_triggered = false;
     if (veml6035.cleanINT())
     {
-      veml6035.enableINT_with_threshold(thd_percent);
       uint16_t als;
       if (veml6035.read_ALS(&als))
       {
@@ -62,6 +61,7 @@ void loop()
         Serial.print('\t');    
         Serial.println(veml6035.get_lux());
       }
+      veml6035.enableINT_with_threshold(thd_percent);
     }
   }
 }
