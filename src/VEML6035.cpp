@@ -61,7 +61,7 @@ VEML6035Class::VEML6035Class(TwoWire& wire) : _wire(&wire)
 
 VEML6035Class::~VEML6035Class()
 {
-  setINT(false);
+  INT_EN(false);
 }
 
 VEML6035Class::begin()
@@ -118,13 +118,24 @@ boolean VEML6035Class::write(uint8_t reg, uint16_t data)
   boolean status = false;
   
   _wire->beginTransmission(slaveAddress);
-  if ((_wire->write(reg) == 1) &&
-      (_wire->write((uint8_t)(data & 0xFF)) == 1) &&
-      (_wire->write((uint8_t)((data >> 8) & 0xFF)) == 1))
+  if (_wire->write(reg) &&
+      _wire->write((uint8_t)(data & 0xFF)) &&
+      _wire->write((uint8_t)((data >> 8) & 0xFF)))
     status = true;
   _wire->endTransmission(true);
 
   return status;
+}
+
+boolean VEML6035Class::bitsUpdate(uint8_t reg, uint16_t mask, uint16_t update)
+{
+  uint16_t value;
+  
+  if (!read(reg, &value))
+    return false;
+  value &= mask;
+  value |= update;
+  return write(reg, value);
 }
 
 boolean VEML6035Class::read_ALS(uint16_t *als)
@@ -158,19 +169,12 @@ float VEML6035Class::get_lux(void)
   return lux;
 }
 
-boolean VEML6035Class::setINT(boolean enable)
+boolean VEML6035Class::INT_EN(boolean enable)
 {
-  uint16_t als_conf;
-  
-  if (!read(VEML6035_REG_ALS_CONF, &als_conf))
-    return false;
-    
-  if (enable)
-    als_conf |= VEML6035_INT_EN;
-  else
-    als_conf &= ~VEML6035_INT_EN;
-
-  return write(VEML6035_REG_ALS_CONF, als_conf);
+  return bitsUpdate(
+    VEML6035_REG_ALS_CONF,
+    ~VEML6035_INT_EN,
+    enable ? VEML6035_INT_EN : 0);
 }
 
 boolean VEML6035Class::enableINT_with_threshold(float percent)
@@ -187,10 +191,10 @@ boolean VEML6035Class::enableINT_with_threshold(float percent)
   uint16_t wh = (thdh > 65535.0f) ? 65535 : (uint16_t)thdh;   
   uint16_t wl = (thdl < 0.0f) ? 0 : (uint16_t)thdl;
 
-  if (setINT(false) &&
+  if (INT_EN(false) &&
       write(VEML6035_REG_WH, wh) &&
       write(VEML6035_REG_WL, wl) &&
-      setINT(true))
+      INT_EN(true))
     return true;
     
   return false;

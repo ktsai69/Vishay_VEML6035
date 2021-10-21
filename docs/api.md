@@ -35,7 +35,7 @@ if (!veml6035.begin()) {
 * [end()](#end)
 * [read_ALS()](#read_ALS)
 * [get_lux()](#get_lux)
-* [setINT()](#setINT)
+* [INT_EN()](#INT_EN)
 * [enableINT_with_threshold()](#enableINT_with_threshold)
 * [cleanINT()](#cleanINT)
 * [lens_factor](#lens_factor)
@@ -78,7 +78,7 @@ veml6035.end();
 * [end()](#end)
 * [read_ALS()](#read_ALS)
 * [get_lux()](#get_lux)
-* [setINT()](#setINT)
+* [INT_EN()](#INT_EN)
 * [enableINT_with_threshold()](#enableINT_with_threshold)
 * [cleanINT()](#cleanINT)
 * [lens_factor](#lens_factor)
@@ -117,7 +117,7 @@ if (veml6035.read_ALS(&als))
 * [end()](#end)
 * [read_ALS()](#read_ALS)
 * [get_lux()](#get_lux)
-* [setINT()](#setINT)
+* [INT_EN()](#INT_EN)
 * [enableINT_with_threshold()](#enableINT_with_threshold)
 * [cleanINT()](#cleanINT)
 * [lens_factor](#lens_factor)
@@ -156,19 +156,19 @@ if (lux >= 0)
 * [end()](#end)
 * [read_ALS()](#read_ALS)
 * [get_lux()](#get_lux)
-* [setINT()](#setINT)
+* [INT_EN()](#INT_EN)
 * [enableINT_with_threshold()](#enableINT_with_threshold)
 * [cleanINT()](#cleanINT)
 * [lens_factor](#lens_factor)
 
-### `setINT()`
+### `INT_EN()`
 
 Enable/disable interrupt 
 
 #### Syntax 
 
 ```
-boolean veml6035.setINT()
+boolean veml6035.INT_EN()
 ```
 
 #### Parameters
@@ -183,7 +183,7 @@ true on success, false on failure.
 
 ```
 // Enable interrupt
-veml6035.setINT(enable);
+veml6035.INT_EN(enable);
 ```
 
 #### See also
@@ -192,7 +192,7 @@ veml6035.setINT(enable);
 * [end()](#end)
 * [read_ALS()](#read_ALS)
 * [get_lux()](#get_lux)
-* [setINT()](#setINT)
+* [INT_EN()](#INT_EN)
 * [enableINT_with_threshold()](#enableINT_with_threshold)
 * [cleanINT()](#cleanINT)
 * [lens_factor](#lens_factor)
@@ -228,7 +228,7 @@ veml6035.enableINT_with_threshold(3.0f);
 * [end()](#end)
 * [read_ALS()](#read_ALS)
 * [get_lux()](#get_lux)
-* [setINT()](#setINT)
+* [INT_EN()](#INT_EN)
 * [enableINT_with_threshold()](#enableINT_with_threshold)
 * [cleanINT()](#cleanINT)
 * [lens_factor](#lens_factor)
@@ -263,7 +263,7 @@ veml6035.cleanINT();
 * [end()](#end)
 * [read_ALS()](#read_ALS)
 * [get_lux()](#get_lux)
-* [setINT()](#setINT)
+* [INT_EN()](#INT_EN)
 * [enableINT_with_threshold()](#enableINT_with_threshold)
 * [cleanINT()](#cleanINT)
 * [lens_factor](#lens_factor)
@@ -299,7 +299,7 @@ Serial.print(veml6035.lens_factor);
 * [end()](#end)
 * [read_ALS()](#read_ALS)
 * [get_lux()](#get_lux)
-* [setINT()](#setINT)
+* [INT_EN()](#INT_EN)
 * [enableINT_with_threshold()](#enableINT_with_threshold)
 * [cleanINT()](#cleanINT)
 * [lens_factor](#lens_factor)
