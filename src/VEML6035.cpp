@@ -56,12 +56,12 @@ VEML6035Class::VEML6035Class(TwoWire& wire) : _wire(&wire)
 {
 }
 
-VEML6035Class::~VEML6035Class()
+VEML6035Class::~VEML6035Class(void)
 {
   INT_EN(false);
 }
 
-VEML6035Class::begin()
+int VEML6035Class::begin(void)
 {
   _wire->begin();
   slaveAddress = VEML6035_ADDRESS;
