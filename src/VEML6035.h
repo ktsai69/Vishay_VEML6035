@@ -33,10 +33,14 @@ class VEML6035Class {
     virtual float get_lux(void);
     boolean INT_EN(boolean enable);
     boolean INT_EN_with_threshold(float percent);
-    boolean clean_INT(void);
+    boolean read_INT_FLAG(uint16_t *int_flag);
     
     float lens_factor;
 
+    const uint16_t
+      INT_FLAG_H = (1 << 14),
+      INT_FLAG_L = (1 << 15);
+      
   private:
     TwoWire* _wire;
     uint8_t slaveAddress;

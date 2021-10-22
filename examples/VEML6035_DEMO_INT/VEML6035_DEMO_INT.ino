@@ -17,10 +17,14 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include <Vishay_VEML6035.h>
+/*
+ * This demo requests to cnnect the INT pin of VEML6035 to Digital Pin 2. 
+ */
+ 
+#include "Vishay_VEML6035.h"
 
 const byte interruptPin = 2;
-volatile boolean isr_triggered = true;
+volatile boolean isr_triggered = false;
 float thd_percent = 1.0f;               // threshold 1%
 
 void setup()
@@ -52,7 +56,9 @@ void loop()
   if (isr_triggered)
   {
     isr_triggered = false;
-    if (veml6035.clean_INT())
+    uint16_t int_flag;
+    if (veml6035.read_INT_FLAG(&int_flag) &&
+        (int_flag & (veml6035.INT_FLAG_H | veml6035.INT_FLAG_L)))
     {
       uint16_t als;
       if (veml6035.read_ALS(&als))

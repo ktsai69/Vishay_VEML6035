@@ -28,7 +28,7 @@
 #define VEML6035_REG_PSM            0x03
 #define VEML6035_REG_ALS            0x04
 #define VEML6035_REG_WHITE          0x05
-#define VEML6035_REG_IF             0x06
+#define VEML6035_REG_INT_FLAG       0x06
 #define VEML6035_REG_ID             0x07
 
 // ALS_CONF
@@ -45,9 +45,6 @@
 #define VEML6035_GAIN               (1 << 10)
 #define VEML6035_DG                 (1 << 11)
 #define VEML6035_SENS               (1 << 12)
-// IF
-#define VEML6035_IF_H               (1 << 14)
-#define VEML6035_IF_L               (1 << 15)
 
 // Default values
 #define VEML6035_DEFAULT_ALS_CONF   (VEML6035_ALS_IT_100MS | VEML6035_SENS)
@@ -200,15 +197,9 @@ boolean VEML6035Class::INT_EN_with_threshold(float percent)
   return false;
 }
 
-boolean VEML6035Class::clean_INT(void)
+boolean VEML6035Class::read_INT_FLAG(uint16_t *int_flag)
 {
-  uint16_t int_flag;
-
-  if (read(VEML6035_REG_IF, &int_flag))
-  {
-    return (int_flag & (VEML6035_IF_H | VEML6035_IF_L)) ? true : false;
-  }
-  return false;
+  return read(VEML6035_REG_INT_FLAG, int_flag);
 }
 
 VEML6035Class veml6035(Wire);

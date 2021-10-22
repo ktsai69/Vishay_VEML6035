@@ -37,7 +37,7 @@ if (!veml6035.begin()) {
 * [get_lux()](#get_lux)
 * [INT_EN()](#INT_EN)
 * [INT_EN_with_threshold()](#INT_EN_with_threshold)
-* [clean_INT()](#clean_INT)
+* [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
 
 ### `end()`
@@ -80,7 +80,7 @@ veml6035.end();
 * [get_lux()](#get_lux)
 * [INT_EN()](#INT_EN)
 * [INT_EN_with_threshold()](#INT_EN_with_threshold)
-* [clean_INT()](#clean_INT)
+* [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
 
 ### `read_ALS()`
@@ -119,7 +119,7 @@ if (veml6035.read_ALS(&als))
 * [get_lux()](#get_lux)
 * [INT_EN()](#INT_EN)
 * [INT_EN_with_threshold()](#INT_EN_with_threshold)
-* [clean_INT()](#clean_INT)
+* [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
 
 ### `get_lux()`
@@ -158,7 +158,7 @@ if (lux >= 0)
 * [get_lux()](#get_lux)
 * [INT_EN()](#INT_EN)
 * [INT_EN_with_threshold()](#INT_EN_with_threshold)
-* [clean_INT()](#clean_INT)
+* [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
 
 ### `INT_EN()`
@@ -194,7 +194,7 @@ veml6035.INT_EN(enable);
 * [get_lux()](#get_lux)
 * [INT_EN()](#INT_EN)
 * [INT_EN_with_threshold()](#INT_EN_with_threshold)
-* [clean_INT()](#clean_INT)
+* [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
 
 ### `INT_EN_with_threshold()`
@@ -230,22 +230,24 @@ veml6035.INT_EN_with_threshold(3.0f);
 * [get_lux()](#get_lux)
 * [INT_EN()](#INT_EN)
 * [INT_EN_with_threshold()](#INT_EN_with_threshold)
-* [clean_INT()](#clean_INT)
+* [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
 
-### `clean_INT()`
+### `read_INT_FLAG()`
 
 Clean interrupt 
 
 #### Syntax 
 
 ```
-boolean veml6035.clean_INT()
+boolean veml6035.read_INT_FLAG(uint16_t *int_flag)
 ```
 
 #### Parameters
 
-None.
+int_flag - point of uint16_t.  The return values includes:
+- **INT_FLAG_H** for excess the high threshold.
+- **INT_FLAG_L** for below the low threshold.
 
 #### Returns
 
@@ -254,7 +256,15 @@ true on success, false on failure.
 #### Example
 
 ```
-veml6035.clean_INT();
+uint16_t int_flag;
+if (veml6035.read_INT_FLAG(&int_flag))
+{
+  if (int_flag & veml6035.INT_FLAG_L)
+    Serial.print("\tLow threshold.");
+  if (int_flag & veml6035.INT_FLAG_H)
+    Serial.print("\tHigh threshold.");
+  Serial.println();
+}
 ```
 
 #### See also
@@ -265,7 +275,7 @@ veml6035.clean_INT();
 * [get_lux()](#get_lux)
 * [INT_EN()](#INT_EN)
 * [INT_EN_with_threshold()](#INT_EN_with_threshold)
-* [clean_INT()](#clean_INT)
+* [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
 
 ### `lens_factor`
@@ -301,5 +311,5 @@ Serial.print(veml6035.lens_factor);
 * [get_lux()](#get_lux)
 * [INT_EN()](#INT_EN)
 * [INT_EN_with_threshold()](#INT_EN_with_threshold)
-* [clean_INT()](#clean_INT)
+* [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
