@@ -21,7 +21,7 @@
  * This demo requests to cnnect the INT pin of VEML6035 to Digital Pin 2. 
  */
  
-#include "Vishay_VEML6035.h"
+#include <Vishay_VEML6035.h>
 
 const byte interruptPin = 2;
 volatile boolean isr_triggered = false;
