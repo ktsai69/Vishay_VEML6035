@@ -38,7 +38,7 @@ void setup()
   // Initial interrupt
   pinMode(interruptPin, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(interruptPin), isr, FALLING);
-  veml6035.enableINT_with_threshold(thd_percent);
+  veml6035.INT_EN_with_threshold(thd_percent);
   Serial.println("ALS\tLux");
 }
 
@@ -52,7 +52,7 @@ void loop()
   if (isr_triggered)
   {
     isr_triggered = false;
-    if (veml6035.cleanINT())
+    if (veml6035.clean_INT())
     {
       uint16_t als;
       if (veml6035.read_ALS(&als))
@@ -61,7 +61,7 @@ void loop()
         Serial.print('\t');    
         Serial.println(veml6035.get_lux());
       }
-      veml6035.enableINT_with_threshold(thd_percent);
+      veml6035.INT_EN_with_threshold(thd_percent);
     }
   }
 }

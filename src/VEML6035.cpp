@@ -177,7 +177,7 @@ boolean VEML6035Class::INT_EN(boolean enable)
     enable ? VEML6035_INT_EN : 0);
 }
 
-boolean VEML6035Class::enableINT_with_threshold(float percent)
+boolean VEML6035Class::INT_EN_with_threshold(float percent)
 {
   uint16_t als;
   
@@ -200,7 +200,7 @@ boolean VEML6035Class::enableINT_with_threshold(float percent)
   return false;
 }
 
-boolean VEML6035Class::cleanINT(void)
+boolean VEML6035Class::clean_INT(void)
 {
   uint16_t int_flag;
 

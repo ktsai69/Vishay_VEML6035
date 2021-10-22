@@ -32,8 +32,8 @@ class VEML6035Class {
     virtual boolean read_ALS(uint16_t *als);
     virtual float get_lux(void);
     boolean INT_EN(boolean enable);
-    boolean enableINT_with_threshold(float percent);
-    boolean cleanINT(void);
+    boolean INT_EN_with_threshold(float percent);
+    boolean clean_INT(void);
     
     float lens_factor;
 

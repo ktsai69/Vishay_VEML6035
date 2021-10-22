@@ -36,8 +36,8 @@ if (!veml6035.begin()) {
 * [read_ALS()](#read_ALS)
 * [get_lux()](#get_lux)
 * [INT_EN()](#INT_EN)
-* [enableINT_with_threshold()](#enableINT_with_threshold)
-* [cleanINT()](#cleanINT)
+* [INT_EN_with_threshold()](#INT_EN_with_threshold)
+* [clean_INT()](#clean_INT)
 * [lens_factor](#lens_factor)
 
 ### `end()`
@@ -79,8 +79,8 @@ veml6035.end();
 * [read_ALS()](#read_ALS)
 * [get_lux()](#get_lux)
 * [INT_EN()](#INT_EN)
-* [enableINT_with_threshold()](#enableINT_with_threshold)
-* [cleanINT()](#cleanINT)
+* [INT_EN_with_threshold()](#INT_EN_with_threshold)
+* [clean_INT()](#clean_INT)
 * [lens_factor](#lens_factor)
 
 ### `read_ALS()`
@@ -118,8 +118,8 @@ if (veml6035.read_ALS(&als))
 * [read_ALS()](#read_ALS)
 * [get_lux()](#get_lux)
 * [INT_EN()](#INT_EN)
-* [enableINT_with_threshold()](#enableINT_with_threshold)
-* [cleanINT()](#cleanINT)
+* [INT_EN_with_threshold()](#INT_EN_with_threshold)
+* [clean_INT()](#clean_INT)
 * [lens_factor](#lens_factor)
 
 ### `get_lux()`
@@ -157,8 +157,8 @@ if (lux >= 0)
 * [read_ALS()](#read_ALS)
 * [get_lux()](#get_lux)
 * [INT_EN()](#INT_EN)
-* [enableINT_with_threshold()](#enableINT_with_threshold)
-* [cleanINT()](#cleanINT)
+* [INT_EN_with_threshold()](#INT_EN_with_threshold)
+* [clean_INT()](#clean_INT)
 * [lens_factor](#lens_factor)
 
 ### `INT_EN()`
@@ -193,18 +193,18 @@ veml6035.INT_EN(enable);
 * [read_ALS()](#read_ALS)
 * [get_lux()](#get_lux)
 * [INT_EN()](#INT_EN)
-* [enableINT_with_threshold()](#enableINT_with_threshold)
-* [cleanINT()](#cleanINT)
+* [INT_EN_with_threshold()](#INT_EN_with_threshold)
+* [clean_INT()](#clean_INT)
 * [lens_factor](#lens_factor)
 
-### `enableINT_with_threshold()`
+### `INT_EN_with_threshold()`
 
 Enable interrupt and set the threshold by percentage. 
 
 #### Syntax 
 
 ```
-boolean veml6035.enableINT_with_threshold(float percent)
+boolean veml6035.INT_EN_with_threshold(float percent)
 ```
 
 #### Parameters
@@ -219,7 +219,7 @@ true on success, false on failure.
 
 ```
 // Enable interrupt and set threshold 3%
-veml6035.enableINT_with_threshold(3.0f);
+veml6035.INT_EN_with_threshold(3.0f);
 ```
 
 #### See also
@@ -229,18 +229,18 @@ veml6035.enableINT_with_threshold(3.0f);
 * [read_ALS()](#read_ALS)
 * [get_lux()](#get_lux)
 * [INT_EN()](#INT_EN)
-* [enableINT_with_threshold()](#enableINT_with_threshold)
-* [cleanINT()](#cleanINT)
+* [INT_EN_with_threshold()](#INT_EN_with_threshold)
+* [clean_INT()](#clean_INT)
 * [lens_factor](#lens_factor)
 
-### `cleanINT()`
+### `clean_INT()`
 
 Clean interrupt 
 
 #### Syntax 
 
 ```
-boolean veml6035.cleanINT()
+boolean veml6035.clean_INT()
 ```
 
 #### Parameters
@@ -254,7 +254,7 @@ true on success, false on failure.
 #### Example
 
 ```
-veml6035.cleanINT();
+veml6035.clean_INT();
 ```
 
 #### See also
@@ -264,8 +264,8 @@ veml6035.cleanINT();
 * [read_ALS()](#read_ALS)
 * [get_lux()](#get_lux)
 * [INT_EN()](#INT_EN)
-* [enableINT_with_threshold()](#enableINT_with_threshold)
-* [cleanINT()](#cleanINT)
+* [INT_EN_with_threshold()](#INT_EN_with_threshold)
+* [clean_INT()](#clean_INT)
 * [lens_factor](#lens_factor)
 
 ### `lens_factor`
@@ -300,6 +300,6 @@ Serial.print(veml6035.lens_factor);
 * [read_ALS()](#read_ALS)
 * [get_lux()](#get_lux)
 * [INT_EN()](#INT_EN)
-* [enableINT_with_threshold()](#enableINT_with_threshold)
-* [cleanINT()](#cleanINT)
+* [INT_EN_with_threshold()](#INT_EN_with_threshold)
+* [clean_INT()](#clean_INT)
 * [lens_factor](#lens_factor)
