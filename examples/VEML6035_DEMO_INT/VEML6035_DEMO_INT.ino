@@ -27,6 +27,11 @@ const byte interruptPin = 2;
 volatile boolean isr_triggered = false;
 float thd_percent = 1.0f;               // threshold 1%
 
+void isr()
+{
+  isr_triggered = true;  
+}
+
 void setup()
 {
   Serial.begin(9600);
@@ -44,11 +49,6 @@ void setup()
   attachInterrupt(digitalPinToInterrupt(interruptPin), isr, FALLING);
   veml6035.INT_EN_with_threshold(thd_percent);
   Serial.println("ALS\tLux");
-}
-
-void isr()
-{
-  isr_triggered = true;  
 }
 
 void loop()
