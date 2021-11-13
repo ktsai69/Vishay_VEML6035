@@ -58,7 +58,6 @@ VEML6035Class::VEML6035Class(TwoWire& wire) : _wire(&wire)
 
 VEML6035Class::~VEML6035Class(void)
 {
-  INT_EN(false);
 }
 
 int VEML6035Class::begin(void)
@@ -82,6 +81,11 @@ int VEML6035Class::begin(void)
   lens_factor = 1.0;
   
   return 1;
+}
+
+void VEML6035Class::end(void)
+{
+  INT_EN(false);
 }
 
 boolean VEML6035Class::read(uint8_t reg, uint16_t *data)
