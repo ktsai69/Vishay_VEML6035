@@ -66,18 +66,18 @@ int VEML6035Class::begin(void)
   slaveAddress = VEML6035_ADDRESS;
 
   // Prevent I2C bus lockup
-  write(VEML6035_REG_WL, VEML6035_DEFAULT_WL);
-  write(VEML6035_REG_WL, VEML6035_DEFAULT_WL);
+  writeWord(VEML6035_REG_WL, VEML6035_DEFAULT_WL);
+  writeWord(VEML6035_REG_WL, VEML6035_DEFAULT_WL);
 
   uint16_t id;
-  if (!read(VEML6035_REG_ID, &id) || (id & 0xFF) != VEML6035_WHO_AM_I)
+  if (!readWord(VEML6035_REG_ID, &id) || (id & 0xFF) != VEML6035_WHO_AM_I)
     return 0;
   
   // Initialization
-  write(VEML6035_REG_ALS_CONF, VEML6035_DEFAULT_ALS_CONF);
-  write(VEML6035_REG_WH, VEML6035_DEFAULT_WH);
-  write(VEML6035_REG_WL, VEML6035_DEFAULT_WL);
-  write(VEML6035_REG_PSM, VEML6035_DEFAULT_PSM);
+  writeWord(VEML6035_REG_ALS_CONF, VEML6035_DEFAULT_ALS_CONF);
+  writeWord(VEML6035_REG_WH, VEML6035_DEFAULT_WH);
+  writeWord(VEML6035_REG_WL, VEML6035_DEFAULT_WL);
+  writeWord(VEML6035_REG_PSM, VEML6035_DEFAULT_PSM);
   lens_factor = 1.0;
   
   return 1;
@@ -88,7 +88,7 @@ void VEML6035Class::end(void)
   INT_EN(false);
 }
 
-boolean VEML6035Class::read(uint8_t reg, uint16_t *data)
+boolean VEML6035Class::readWord(uint8_t reg, uint16_t *data)
 {
   uint8_t   wd;
 
@@ -114,7 +114,7 @@ read_error:
   return false;
 }
 
-boolean VEML6035Class::write(uint8_t reg, uint16_t data)
+boolean VEML6035Class::writeWord(uint8_t reg, uint16_t data)
 {
   boolean status = false;
   
@@ -132,16 +132,16 @@ boolean VEML6035Class::bitsUpdate(uint8_t reg, uint16_t mask, uint16_t update)
 {
   uint16_t value;
   
-  if (!read(reg, &value))
+  if (!readWord(reg, &value))
     return false;
   value &= mask;
   value |= update;
-  return write(reg, value);
+  return writeWord(reg, value);
 }
 
 boolean VEML6035Class::read_ALS(uint16_t *als)
 {
-  return read(VEML6035_REG_ALS, als);
+  return readWord(VEML6035_REG_ALS, als);
 }
 
 float VEML6035Class::get_lux(void)
@@ -149,7 +149,7 @@ float VEML6035Class::get_lux(void)
   uint16_t als_conf;
   uint16_t als;
   
-  if (!read(VEML6035_REG_ALS_CONF, &als_conf) || !read_ALS(&als))
+  if (!readWord(VEML6035_REG_ALS_CONF, &als_conf) || !read_ALS(&als))
     return -1.0f;
 
   int als_it = (als_conf & VEML6035_ALS_IT_MASK) >> VEML6035_ALS_IT_SHIFT;
@@ -193,8 +193,8 @@ boolean VEML6035Class::INT_EN_with_threshold(float percent)
   uint16_t wl = (thdl < 0.0f) ? 0 : (uint16_t)thdl;
 
   if (INT_EN(false) &&
-      write(VEML6035_REG_WH, wh) &&
-      write(VEML6035_REG_WL, wl) &&
+      writeWord(VEML6035_REG_WH, wh) &&
+      writeWord(VEML6035_REG_WL, wl) &&
       INT_EN(true))
     return true;
     
@@ -203,7 +203,7 @@ boolean VEML6035Class::INT_EN_with_threshold(float percent)
 
 boolean VEML6035Class::read_INT_FLAG(uint16_t *int_flag)
 {
-  return read(VEML6035_REG_INT_FLAG, int_flag);
+  return readWord(VEML6035_REG_INT_FLAG, int_flag);
 }
 
 VEML6035Class veml6035(Wire);
