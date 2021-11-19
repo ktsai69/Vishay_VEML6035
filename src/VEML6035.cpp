@@ -182,7 +182,7 @@ boolean VEML6035Class::INT_EN_with_threshold(float percent)
 {
   uint16_t als;
   
-  if (!read(VEML6035_REG_ALS, &als) || percent <= 0)
+  if (!read_ALS(&als) || percent <= 0)
     return false;
  
   float thdh = (float)als * (100.0 + percent) / 100.0;
