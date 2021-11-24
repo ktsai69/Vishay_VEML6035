@@ -74,13 +74,15 @@ int VEML6035Class::begin(void)
     return 0;
   
   // Initialization
-  writeWord(VEML6035_REG_ALS_CONF, VEML6035_DEFAULT_ALS_CONF);
-  writeWord(VEML6035_REG_WH, VEML6035_DEFAULT_WH);
-  writeWord(VEML6035_REG_WL, VEML6035_DEFAULT_WL);
-  writeWord(VEML6035_REG_PSM, VEML6035_DEFAULT_PSM);
-  lens_factor = 1.0;
-  
-  return 1;
+  if (writeWord(VEML6035_REG_ALS_CONF, VEML6035_DEFAULT_ALS_CONF) &&
+      writeWord(VEML6035_REG_WH, VEML6035_DEFAULT_WH) &&
+      writeWord(VEML6035_REG_WL, VEML6035_DEFAULT_WL) &&
+      writeWord(VEML6035_REG_PSM, VEML6035_DEFAULT_PSM))
+  {
+    lens_factor = 1.0;
+    return 1;
+  }
+  return 0;
 }
 
 void VEML6035Class::end(void)
